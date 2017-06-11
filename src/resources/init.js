@@ -1,54 +1,60 @@
 const logger = require('log4js').getLogger('Resources Initializator')
 let dao = null
 
-function getAllCachedData(req, res, next) {
+function getAllCachedData (req, res, next) {
   logger.debug(`Retrieving ALL cached data`)
 
   dao.getAllCachedData(
     (err, data) => {
-      res.
-        status(200).
-        send({data: data})
+      res
+        .status(err ? 503 : 200)
+        .send({data: data})
       next()
     }
   )
 }
 
-function deleteAllCachedData(req, res, next) {
+function deleteAllCachedData (req, res, next) {
   logger.debug(`Removing ALL cached data`)
 
   dao.removeAllCachedData(
     (err, data) => {
-      res.
-        status(204).
-        send({})
+      res
+        .status(err ? 503 : 204)
+        .send({})
       next()
     }
   )
 }
 
-function getCachedData(req, res, next) {
+function getCachedData (req, res, next) {
   logger.debug(`Retrieving cached data with key: ${req.params.key}`)
 
   dao.getCachedData(
     req.params.key,
     (err, data, upserted) => {
-      res.
-        status(upserted ? 201: 200).
-        send({data: data})
+      if (err) {
+        res
+          .status(503)
+          .send({err: JSON.stringify(err)})
+      } else {
+        res
+          .status(upserted ? 201 : 200)
+          .send({data: data})
+      }
       next()
     }
   )
 }
 
-function updateCachedData(req, res, next) {
+function updateCachedData (req, res, next) {
   logger.debug(`Updating/Creating cached data with key: ${req.params.key}`)
 
   // validating request
   if (!req.params.key || !req.params.data) {
-    res.
-      status(400).
-      send({error: 'Bad arguments!!!'})
+    res
+      .status(400)
+      .send({error: 'Bad arguments!!!'})
 
     return next()
   }
@@ -56,29 +62,40 @@ function updateCachedData(req, res, next) {
   dao.updateCachedData(
     req.params,
     (err, data) => {
-      res.
-        status(!data ? 400 || 201).
-        send({})
+      if (err) {
+        res
+          .status(503)
+          .send({err: JSON.stringify(err)})
+      } else {
+        res
+          .status(!data ? 400 : 201)
+          .send({})
+      }
 
       next()
     }
   )
 }
 
-function deleteCachedData(req, res, next) {
+function deleteCachedData (req, res, next) {
   logger.debug(`Removing cached data with key: ${req.params.key}`)
 
   dao.removeCachedData(
     req.params.key,
     (err, data) => {
-      res.
-        status(204).
-        send({})
+      if (err) {
+        res
+          .status(503)
+          .send({err: JSON.stringify(err)})
+      } else {
+        res
+          .status(204)
+          .send({})
+      }
 
       next()
     }
   )
-
 }
 module.exports = (aConfig, aServer, aDAOobject) => {
   logger.debug('Adding handlers...')

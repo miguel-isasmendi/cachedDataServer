@@ -1,16 +1,16 @@
 const logger = require('log4js').getLogger('Cached Data DAO')
 
 class CachedDataDAO {
-  constructor(dbConnectorData) {
+  constructor (dbConnectorData) {
     this.dbConnectorData = dbConnectorData
     this.CachedData = this.dbConnectorData.models['CachedData']
   }
 
-  removeCachedData(cacheKey, callback) {
+  removeCachedData (cacheKey, callback) {
     this.CachedData.findOneAndRemove({'key': cacheKey}, callback)
   }
 
-  updateCachedData(cacheKey, callback) {
+  updateCachedData (cacheKey, callback) {
     new this.CachedData({key: cacheKey})
       .save(
         (error, savedData) => {
@@ -19,7 +19,7 @@ class CachedDataDAO {
       )
   }
 
-  getCachedData(cacheKey, callback) {
+  getCachedData (cacheKey, callback) {
     this.CachedData.findOne(
       {'key': cacheKey},
       (err, data) => {
@@ -31,16 +31,16 @@ class CachedDataDAO {
           logger.debug('Cache hit!')
 
           callback(err, data, false)
-        }        
+        }
       }
     )
   }
 
-  getAllCachedData(callback) {
+  getAllCachedData (callback) {
     this.CachedData.find({}, callback)
   }
 
-  removeAllCachedData(callback) {
+  removeAllCachedData (callback) {
     this.CachedData.remove({}, callback)
   }
 }

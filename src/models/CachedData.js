@@ -1,7 +1,7 @@
 const uuid = require('uuid')
 
 module.exports = function (connection, mongoose, globalModelContainer) {
-  let CachedDataSchema = new mongoose.Schema( {
+  let CachedDataSchema = new mongoose.Schema({
     key: { type: String, required: true, unique: true },
     data: { type: String, required: true, default: uuid.v4() }
   })
