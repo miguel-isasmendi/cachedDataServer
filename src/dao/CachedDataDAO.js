@@ -26,7 +26,7 @@ class CachedDataDAO {
         if (!data) {
           logger.debug('Cache miss!')
 
-          new this.CachedData(data)
+          new this.CachedData({'key': cacheKey})
             .save(
               (error, savedData) => {
                 callback(error, savedData, true)

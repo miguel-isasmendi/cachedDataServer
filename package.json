@@ -11,7 +11,7 @@
     "lint": "eslint --color --ext .js src config",
     "check-coverage": "istanbul check-coverage ./coverage/coverage.json",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/unit/spec --recursive",
-    "unit": "mocha ./test/unit/spec --recursive"
+    "test": "mocha ./test/unit/spec --recursive"
   },
   "devDependencies": {
     "chai": "3.5.0",
