@@ -1,6 +1,7 @@
 const express = require('express')
 const server = express()
 const processModule = require('process')
+const bodyParser = require('body-parser')
 const logger = require('log4js').getLogger('Main App')
 
 let programArgs = require('commander')
@@ -26,6 +27,11 @@ const config = require(`./config/config.${configFileName}`)
 
 logger.info('Configuration read:')
 logger.info(JSON.stringify(config))
+
+// parse application/x-www-form-urlencoded
+server.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+server.use(bodyParser.json())
 
 logger.info('Starting App...')
 

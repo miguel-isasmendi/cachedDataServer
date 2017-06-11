@@ -49,9 +49,10 @@ function getCachedData (req, res, next) {
 
 function updateCachedData (req, res, next) {
   logger.debug(`Updating/Creating cached data with key: ${req.params.key}`)
+  logger.debug(`Processing body: ${JSON.stringify(req.body)}`)
 
   // validating request
-  if (!req.params.key || !req.params.data) {
+  if (!req.body.key || !req.body.data || Object.keys(req.body).length !== 2) {
     res
       .status(400)
       .send({error: 'Bad arguments!!!'})
@@ -60,7 +61,7 @@ function updateCachedData (req, res, next) {
   }
 
   dao.updateCachedData(
-    req.params,
+    req.body,
     (err, data) => {
       if (err) {
         res

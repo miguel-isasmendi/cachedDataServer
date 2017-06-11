@@ -10,12 +10,12 @@ class CachedDataDAO {
     this.CachedData.findOneAndRemove({'key': cacheKey}, callback)
   }
 
-  updateCachedData (cacheKey, callback) {
-    new this.CachedData({key: cacheKey})
-      .save(
-        (error, savedData) => {
-          callback(error, savedData, true)
-        }
+  updateCachedData (data, callback) {
+    this.CachedData
+      .findOneAndUpdate(
+        {key: data.key},
+        data,
+        callback
       )
   }
 
@@ -26,7 +26,12 @@ class CachedDataDAO {
         if (!data) {
           logger.debug('Cache miss!')
 
-          this.updateCachedData(cacheKey, callback)
+          new this.CachedData(data)
+            .save(
+              (error, savedData) => {
+                callback(error, savedData, true)
+              }
+            )
         } else {
           logger.debug('Cache hit!')
 
